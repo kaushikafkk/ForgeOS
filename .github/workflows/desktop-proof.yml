@@ -39,9 +39,7 @@ jobs:
           run-id: ${{ steps.iso.outputs.run_id }}
 
       - name: Verify ISO checksum
-        run: |
-          cd .build
-          sha256sum --check forgeos-amd64.hybrid.iso.sha256
+        run: sha256sum --check .build/forgeos-amd64.hybrid.iso.sha256
 
       - name: Install virtual machine tools
         run: |
