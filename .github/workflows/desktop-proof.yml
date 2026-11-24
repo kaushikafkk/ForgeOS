@@ -62,8 +62,16 @@ jobs:
             -no-reboot &
           qemu_pid=$!
 
+          for attempt in $(seq 1 20); do
+            [ -S /tmp/forgeos-monitor.sock ] && break
+            sleep 1
+          done
+          test -S /tmp/forgeos-monitor.sock
+          sleep 5
+          echo "sendkey ret" | socat - UNIX-CONNECT:/tmp/forgeos-monitor.sock
+
           previous=0
-          for seconds in 90 180 300 420; do
+          for seconds in 120 240 360 480; do
             elapsed=0
             delay=$((seconds - previous))
             while [ "$elapsed" -lt "$delay" ]; do
