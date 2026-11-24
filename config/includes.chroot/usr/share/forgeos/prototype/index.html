@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forge Hub</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <aside class="rail" aria-label="Forge Hub navigation">
+      <div class="brand"><span class="mark">F</span><span>ForgeOS</span></div>
+      <nav>
+        <button class="nav active" data-view="overview"><span>◫</span>Overview</button>
+        <button class="nav" data-view="workspaces"><span>⌘</span>Workspaces</button>
+        <button class="nav" data-view="updates"><span>↻</span>Updates</button>
+        <button class="nav" data-view="recovery"><span>◇</span>Recovery</button>
+      </nav>
+      <div class="rail-foot"><span class="status-dot"></span>Local only<br><small>No telemetry</small></div>
+    </aside>
+
+    <main id="main">
+      <header class="topbar">
+        <div><p class="eyebrow">MILESTONE ZERO</p><h1 id="view-title">System overview</h1></div>
+        <div class="top-actions"><span class="health"><i></i>System healthy</span><button class="icon-button" aria-label="Open command palette">⌘ K</button><div class="avatar">K</div></div>
+      </header>
+
+      <section class="view active-view" id="overview" aria-labelledby="view-title">
+        <div class="hero">
+          <div><span class="tag">FORGEOS 0.1 DEV</span><h2>Your development system<br>is ready to build</h2><p>Debian stability, isolated workspaces, and recovery you can see before you need it.</p></div>
+          <div class="hero-visual" aria-hidden="true"><div class="orbit one"></div><div class="orbit two"></div><div class="core">F</div></div>
+        </div>
+
+        <div class="metric-grid">
+          <article class="metric"><div class="metric-icon teal">⌁</div><div><span>System state</span><strong>Healthy</strong><small>All core checks passed</small></div></article>
+          <article class="metric"><div class="metric-icon blue">▣</div><div><span>Workspaces</span><strong>3 active</strong><small>7 containers running</small></div></article>
+          <article class="metric"><div class="metric-icon purple">◇</div><div><span>Recovery</span><strong>Protected</strong><small>Last point 18 minutes ago</small></div></article>
+          <article class="metric"><div class="metric-icon amber">↻</div><div><span>Updates</span><strong>Up to date</strong><small>Checked 4 minutes ago</small></div></article>
+        </div>
+
+        <div class="content-grid">
+          <article class="panel workspaces-panel">
+            <div class="panel-head"><div><p class="eyebrow">ACTIVE WORK</p><h3>Workspaces</h3></div><button class="primary" id="new-workspace">+ New workspace</button></div>
+            <div class="workspace" tabindex="0"><span class="workspace-icon api">API</span><div><strong>payments-api</strong><small>Go 1.23 · PostgreSQL 17</small></div><span class="pill running">Running</span><time>38 min</time></div>
+            <div class="workspace" tabindex="0"><span class="workspace-icon rust">RS</span><div><strong>event-router</strong><small>Rust 1.84 · NATS</small></div><span class="pill running">Running</span><time>2 h</time></div>
+            <div class="workspace" tabindex="0"><span class="workspace-icon web">TS</span><div><strong>control-plane-ui</strong><small>Node 22 · TypeScript</small></div><span class="pill sleeping">Sleeping</span><time>Yesterday</time></div>
+          </article>
+
+          <article class="panel activity-panel">
+            <div class="panel-head"><div><p class="eyebrow">AUDITABLE BY DEFAULT</p><h3>Recent activity</h3></div><button class="text-button">View all</button></div>
+            <ul class="timeline">
+              <li><i class="green"></i><div><strong>Health check completed</strong><small>No action required</small></div><time>4m</time></li>
+              <li><i class="blue-dot"></i><div><strong>Workspace started</strong><small>event-router</small></div><time>2h</time></li>
+              <li><i class="purple-dot"></i><div><strong>Recovery point created</strong><small>Automatic · 1.8 GB changed</small></div><time>3h</time></li>
+              <li><i class="gray-dot"></i><div><strong>Packages updated</strong><small>12 security fixes</small></div><time>1d</time></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="workspaces"><div class="empty-panel"><span>⌘</span><h2>Reproducible workspaces</h2><p>Projects will declare tools, services, secrets, and resource limits in a reviewable manifest.</p><button class="primary">Create a workspace</button></div></section>
+      <section class="view" id="updates"><div class="empty-panel"><span>↻</span><h2>Updates with a plan</h2><p>ForgeOS will show package changes, create a recovery point, and verify health before committing an update.</p><button class="primary">Check for updates</button></div></section>
+      <section class="view" id="recovery"><div class="empty-panel"><span>◇</span><h2>Recovery is a first-class workflow</h2><p>Preview snapshots, compare changed files, and return to a known state without hiding what happens.</p><button class="primary">Open recovery timeline</button></div></section>
+    </main>
+  </div>
+
+  <dialog id="dialog"><form method="dialog"><button class="dialog-close" aria-label="Close">×</button><span class="dialog-icon">⌘</span><h2>Workspace creation is staged</h2><p>This milestone demonstrates the interface and read-only system API. Workspace mutation arrives after Polkit authorization and rollback tests.</p><button class="primary">Understood</button></form></dialog>
+  <script src="app.js"></script>
+</body>
+</html>

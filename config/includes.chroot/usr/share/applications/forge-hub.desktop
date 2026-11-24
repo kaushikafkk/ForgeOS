@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Forge Hub
+Comment=System health, workspaces, updates, and recovery
+Exec=firefox-esr file:///usr/share/forgeos/prototype/index.html
+Icon=forgeos
+Terminal=false
+Categories=System;Settings;
+Keywords=ForgeOS;System;Recovery;Containers;

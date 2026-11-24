@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+getent group forgeos >/dev/null || groupadd --system forgeos
+systemctl enable forged.socket
+install -d -m 0755 /usr/share/forgeos /etc/forgeos
+update-desktop-database /usr/share/applications || true

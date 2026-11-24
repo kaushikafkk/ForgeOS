@@ -1,0 +1,32 @@
+name: Build ISO
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  iso:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 90
+    steps:
+      - name: Install build tools
+        run: apt-get update && apt-get install -y git live-build debootstrap squashfs-tools xorriso isolinux syslinux-common ca-certificates golang
+      - uses: actions/checkout@v4
+      - name: Build ForgeOS binaries
+        run: |
+          mkdir -p config/includes.chroot/usr/libexec/forgeos config/includes.chroot/usr/bin
+          CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o config/includes.chroot/usr/libexec/forgeos/forged ./cmd/forged
+          CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o config/includes.chroot/usr/bin/forge ./cmd/forge
+      - name: Build image
+        run: bash scripts/build-iso.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: forgeos-amd64-milestone-zero
+          path: |
+            .build/forgeos-amd64.hybrid.iso
+            .build/forgeos-amd64.hybrid.iso.sha256
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,23 @@
+# live-build output
+.build/
+binary/
+cache/
+chroot/
+local/
+*.hybrid.iso
+*.img
+
+# Go
+bin/
+coverage.out
+
+# editors and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+__pycache__/
+Blueprint/qa/
+Blueprint/qa2/
+Blueprint/qa3/
+

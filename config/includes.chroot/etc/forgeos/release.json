@@ -1,0 +1,9 @@
+{
+  "product": "ForgeOS",
+  "release": "0.1-dev",
+  "channel": "milestone-zero",
+  "base": "Debian 13",
+  "architecture": "amd64",
+  "mutations_enabled": false,
+  "telemetry_enabled": false
+}

@@ -1,0 +1,12 @@
+PRETTY_NAME="ForgeOS 0.1 Milestone Zero"
+NAME="ForgeOS"
+VERSION_ID="0.1"
+VERSION="0.1 Milestone Zero"
+VERSION_CODENAME=trixie
+ID=forgeos
+ID_LIKE=debian
+HOME_URL="https://github.com/kaushikafkk/ForgeOS"
+DOCUMENTATION_URL="https://github.com/kaushikafkk/ForgeOS/tree/main/docs"
+SUPPORT_URL="https://github.com/kaushikafkk/ForgeOS/issues"
+BUG_REPORT_URL="https://github.com/kaushikafkk/ForgeOS/issues"
+BUILD_ID=milestone-zero

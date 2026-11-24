@@ -1,0 +1,32 @@
+[Unit]
+Description=ForgeOS read-only control service
+Documentation=https://github.com/kaushikafkk/ForgeOS/tree/main/docs
+Requires=forged.socket
+After=local-fs.target
+
+[Service]
+Type=simple
+ExecStart=/usr/libexec/forgeos/forged --socket /run/forgeos/forged.sock
+User=root
+Group=forgeos
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+UMask=0077
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target

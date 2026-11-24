@@ -1,0 +1,13 @@
+[Unit]
+Description=ForgeOS control socket
+
+[Socket]
+ListenStream=/run/forgeos/forged.sock
+SocketMode=0660
+SocketUser=root
+SocketGroup=forgeos
+DirectoryMode=0755
+RemoveOnStop=true
+
+[Install]
+WantedBy=sockets.target
