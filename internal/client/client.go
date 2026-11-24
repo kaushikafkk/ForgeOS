@@ -26,4 +26,3 @@ func Request(socketPath, action string) (api.Response, error) {
 	}
 	return response, nil
 }
-

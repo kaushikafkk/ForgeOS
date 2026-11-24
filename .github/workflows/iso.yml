@@ -17,7 +17,12 @@ permissions:
 jobs:
   iso:
     runs-on: ubuntu-latest
-    container: debian:trixie
+    container:
+      image: debian:trixie
+      # live-build mounts proc, sysfs, and devpts while assembling the chroot.
+      # The job container therefore needs the same capability as a local
+      # rootful live-build host.
+      options: --privileged
     timeout-minutes: 90
     steps:
       - name: Install build tools

@@ -30,4 +30,3 @@ func TestRejectsUnknownAction(t *testing.T) {
 		t.Fatalf("expected unsupported_action, got %#v", response)
 	}
 }
-

@@ -22,13 +22,12 @@ type Error struct {
 }
 
 type Status struct {
-	Product       string            `json:"product"`
-	Release       string            `json:"release"`
-	API           string            `json:"api"`
-	Mode          string            `json:"mode"`
-	Healthy       bool              `json:"healthy"`
-	StartedAt     time.Time         `json:"started_at"`
-	Capabilities  []string          `json:"capabilities"`
-	Safety        map[string]string `json:"safety"`
+	Product      string            `json:"product"`
+	Release      string            `json:"release"`
+	API          string            `json:"api"`
+	Mode         string            `json:"mode"`
+	Healthy      bool              `json:"healthy"`
+	StartedAt    time.Time         `json:"started_at"`
+	Capabilities []string          `json:"capabilities"`
+	Safety       map[string]string `json:"safety"`
 }
-

@@ -70,7 +70,6 @@ func (s *Server) Serve(socketPath string) error {
 	return s.ServeListener(listener)
 }
 
-
 // ServeListener accepts requests from an existing listener. This allows
 // systemd socket activation to own the Unix socket and pass descriptor 3 to
 // forged without a second process trying to bind the same path.
@@ -103,4 +102,3 @@ func failure(code, message string) api.Response {
 		Error:   &api.Error{Code: code, Message: message},
 	}
 }
-

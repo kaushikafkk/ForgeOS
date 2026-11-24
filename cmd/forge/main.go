@@ -50,4 +50,3 @@ func main() {
 	fmt.Printf("mode:    %s\n", status.Mode)
 	fmt.Printf("api:     %s\n", status.API)
 }
-
