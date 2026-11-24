@@ -2,13 +2,15 @@
 from __future__ import annotations
 
 import json
+import os
+import shutil
 import socket
 from pathlib import Path
 
 import gi
 
 gi.require_version("Gtk", "4.0")
-from gi.repository import Gdk, Gio, GLib, Gtk
+from gi.repository import Gdk, Gio, GLib, Gtk, Pango
 
 
 SOCKET_PATH = "/run/forgeos/forged.sock"
@@ -34,234 +36,189 @@ def daemon_status() -> dict:
             return payload["data"]
     except (OSError, ValueError, KeyError):
         pass
-    return {
-        "product": "ForgeOS",
-        "release": "0.1-dev",
-        "mode": "service unavailable",
-        "healthy": False,
-        "capabilities": [],
-        "safety": {"mutations": "disabled", "telemetry": "disabled"},
-    }
+    return {"healthy": False, "release": "0.1-dev", "capabilities": []}
 
 
-class Metric(Gtk.Box):
-    def __init__(self, icon: str, label: str, value: str, detail: str, color: str):
+def host_metrics() -> tuple[int, int, int]:
+    cores = max(os.cpu_count() or 1, 1)
+    try:
+        cpu = min(100, round((os.getloadavg()[0] / cores) * 100))
+    except OSError:
+        cpu = 0
+
+    values: dict[str, int] = {}
+    try:
+        for line in Path("/proc/meminfo").read_text().splitlines():
+            key, value = line.split(":", 1)
+            values[key] = int(value.strip().split()[0])
+        total = values.get("MemTotal", 1)
+        available = values.get("MemAvailable", total)
+        ram = round(((total - available) / total) * 100)
+    except (OSError, ValueError, ZeroDivisionError):
+        ram = 0
+
+    disk = shutil.disk_usage("/")
+    used = round(((disk.total - disk.free) / disk.total) * 100) if disk.total else 0
+    return cpu, ram, used
+
+
+def workspace_count() -> int:
+    root = Path.home() / "workspaces"
+    try:
+        return sum(1 for item in root.iterdir() if item.is_dir())
+    except OSError:
+        return 0
+
+
+class StatusCard(Gtk.Box):
+    def __init__(self, icon: str, title: str, detail: str, color: str):
         super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=14)
-        self.add_css_class("metric")
+        self.add_css_class("status-card")
+
         glyph = Gtk.Label(label=icon)
-        glyph.add_css_class("metric-icon")
+        glyph.add_css_class("card-icon")
         glyph.add_css_class(color)
         self.append(glyph)
-        text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        caption = Gtk.Label(label=label, xalign=0)
-        caption.add_css_class("caption")
-        main = Gtk.Label(label=value, xalign=0)
-        main.add_css_class("metric-value")
-        sub = Gtk.Label(label=detail, xalign=0)
-        sub.add_css_class("detail")
-        text.append(caption)
-        text.append(main)
-        text.append(sub)
-        self.append(text)
+
+        copy = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)
+        copy.set_hexpand(True)
+        self.title = Gtk.Label(label=title, xalign=0)
+        self.title.add_css_class("card-title")
+        self.detail = Gtk.Label(label=detail, xalign=0)
+        self.detail.set_ellipsize(Pango.EllipsizeMode.END)
+        self.detail.add_css_class("card-detail")
+        copy.append(self.title)
+        copy.append(self.detail)
+        self.append(copy)
+
+        arrow = Gtk.Label(label="›")
+        arrow.add_css_class("card-arrow")
+        self.append(arrow)
+
+    def set_copy(self, title: str, detail: str):
+        self.title.set_text(title)
+        self.detail.set_text(detail)
 
 
 class ForgeHub(Gtk.ApplicationWindow):
     def __init__(self, app: Gtk.Application):
         super().__init__(application=app, title="Forge Hub")
-        self.set_default_size(1440, 900)
-        self.set_size_request(980, 650)
-        self.status = daemon_status()
+        self.set_default_size(468, 650)
+        self.set_size_request(420, 590)
+        self.set_resizable(False)
+        self.set_decorated(False)
+        self.add_css_class("forge-window")
 
-        root = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        root.add_css_class("hub-root")
         self.set_child(root)
-        root.append(self.build_sidebar())
+        root.append(self.build_header())
 
-        self.content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        self.content.set_hexpand(True)
-        root.append(self.content)
-        self.content.append(self.build_header())
+        cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        cards.add_css_class("cards")
+        root.append(cards)
 
-        self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
-        self.stack.set_hexpand(True)
-        self.stack.set_vexpand(True)
-        self.stack.set_margin_start(34)
-        self.stack.set_margin_end(34)
-        self.stack.set_margin_bottom(32)
-        self.content.append(self.stack)
-        self.stack.add_named(self.build_overview(), "overview")
-        self.stack.add_named(self.build_message("Workspaces", "Reproducible project environments arrive after the authorization and rollback gates."), "workspaces")
-        self.stack.add_named(self.build_message("Updates", "Package plans will create a recovery point and verify health before commit."), "updates")
-        self.stack.add_named(self.build_message("Recovery", "Snapshot inspection is designed, but mutations remain disabled in milestone zero."), "recovery")
+        self.system_card = StatusCard("⌁", "Checking system", "Connecting to forged …", "teal")
+        cards.append(self.system_card)
 
-    def build_sidebar(self) -> Gtk.Box:
-        side = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        side.add_css_class("sidebar")
-        side.set_size_request(220, -1)
-        brand = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        brand.set_margin_bottom(24)
-        mark = Gtk.Label(label="F")
-        mark.add_css_class("brand-mark")
-        name = Gtk.Label(label="ForgeOS")
-        name.add_css_class("brand-name")
-        brand.append(mark)
-        brand.append(name)
-        side.append(brand)
+        snapshot_present = Path("/.snapshots").exists()
+        cards.append(StatusCard(
+            "◇",
+            "Snapshot protected" if snapshot_present else "Recovery guarded",
+            "Btrfs snapshots detected" if snapshot_present else "Snapshot mutations stay disabled",
+            "purple",
+        ))
 
-        group = None
-        for name, icon, key in [
-            ("Overview", "▦", "overview"),
-            ("Workspaces", "⌘", "workspaces"),
-            ("Updates", "↻", "updates"),
-            ("Recovery", "◇", "recovery"),
-        ]:
-            button = Gtk.ToggleButton(label=f"{icon}   {name}")
-            button.add_css_class("nav-button")
-            if group is not None:
-                button.set_group(group)
-            else:
-                group = button
-                button.set_active(True)
-            button.connect("toggled", self.change_view, key)
-            side.append(button)
+        count = workspace_count()
+        cards.append(StatusCard(
+            "▱",
+            f"{count} workspace{'s' if count != 1 else ''}",
+            "~/workspaces · Podman foundation ready",
+            "teal",
+        ))
 
-        spacer = Gtk.Box()
-        spacer.set_vexpand(True)
-        side.append(spacer)
-        local = Gtk.Label(label="●  Local only\nNo telemetry", xalign=0)
-        local.add_css_class("local-state")
-        side.append(local)
-        return side
+        cards.append(StatusCard(
+            "⇩",
+            "Updates planned",
+            "Transactional update gate is not enabled",
+            "amber",
+        ))
 
-    def change_view(self, button: Gtk.ToggleButton, key: str):
-        if button.get_active() and hasattr(self, "stack"):
-            self.stack.set_visible_child_name(key)
-            self.title_label.set_text({"overview": "System overview", "workspaces": "Workspaces", "updates": "System updates", "recovery": "Recovery"}[key])
+        divider = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+        divider.add_css_class("divider")
+        root.append(divider)
+        root.append(self.build_modes())
+
+        footer = Gtk.Label(label="LOCAL FIRST  ·  NO TELEMETRY")
+        footer.add_css_class("footer")
+        root.append(footer)
+
+        self.refresh_status()
+        GLib.timeout_add_seconds(5, self.refresh_status)
 
     def build_header(self) -> Gtk.Box:
-        header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
-        header.add_css_class("header")
-        title_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        eyebrow = Gtk.Label(label="MILESTONE ZERO", xalign=0)
-        eyebrow.add_css_class("eyebrow")
-        self.title_label = Gtk.Label(label="System overview", xalign=0)
-        self.title_label.add_css_class("window-title")
-        title_box.append(eyebrow)
-        title_box.append(self.title_label)
-        header.append(title_box)
-        spacer = Gtk.Box()
-        spacer.set_hexpand(True)
-        header.append(spacer)
-        healthy = bool(self.status.get("healthy"))
-        badge = Gtk.Label(label=("●  System healthy" if healthy else "●  Service offline"))
-        badge.add_css_class("health-badge")
-        badge.add_css_class("healthy" if healthy else "offline")
-        header.append(badge)
+        header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=14)
+        header.add_css_class("hub-header")
+
+        logo = Gtk.Image.new_from_icon_name("forgeos")
+        logo.set_pixel_size(48)
+        logo.add_css_class("hub-logo")
+        header.append(logo)
+
+        copy = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        copy.set_hexpand(True)
+        title = Gtk.Label(label="Forge Hub", xalign=0)
+        title.add_css_class("hub-title")
+        subtitle = Gtk.Label(label="Your ForgeOS control surface", xalign=0)
+        subtitle.add_css_class("hub-subtitle")
+        copy.append(title)
+        copy.append(subtitle)
+        header.append(copy)
+
+        close = Gtk.Button(label="×")
+        close.add_css_class("close-button")
+        close.set_tooltip_text("Close Forge Hub")
+        close.connect("clicked", lambda _button: self.close())
+        header.append(close)
         return header
 
-    def build_overview(self) -> Gtk.ScrolledWindow:
-        scroll = Gtk.ScrolledWindow()
-        scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
-        page.set_margin_top(24)
-        scroll.set_child(page)
+    def build_modes(self) -> Gtk.Box:
+        section = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        section.add_css_class("mode-section")
+        label = Gtk.Label(label="Workspace Mode", xalign=0)
+        label.add_css_class("mode-label")
+        section.append(label)
 
-        hero = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
-        hero.add_css_class("hero")
-        copy = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        copy.set_hexpand(True)
-        tag = Gtk.Label(label="FORGEOS 0.1 DEV", xalign=0)
-        tag.add_css_class("tag")
-        headline = Gtk.Label(label="Your development system\nis ready to build", xalign=0)
-        headline.add_css_class("hero-title")
-        body = Gtk.Label(label="A complete Debian-based desktop foundation with a native control plane, reproducible image build, and recovery-first boundaries.", xalign=0, wrap=True)
-        body.add_css_class("hero-copy")
-        copy.append(tag)
-        copy.append(headline)
-        copy.append(body)
-        hero.append(copy)
-        emblem = Gtk.Label(label="F")
-        emblem.add_css_class("hero-emblem")
-        hero.append(emblem)
-        page.append(hero)
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        row.set_homogeneous(True)
+        for glyph, label_text, enabled in [
+            ("‹/›", "CODE", True),
+            ("△", "TEST", False),
+            ("↗", "SHIP", False),
+        ]:
+            button = Gtk.Button(label=f"{glyph}   {label_text}")
+            button.add_css_class("mode-button")
+            if enabled:
+                button.add_css_class("selected")
+            else:
+                button.set_sensitive(False)
+                button.set_tooltip_text(f"{label_text.title()} mode arrives after milestone zero")
+            row.append(button)
+        section.append(row)
+        return section
 
-        metrics = Gtk.Grid(column_spacing=14, row_spacing=14)
-        metrics.set_column_homogeneous(True)
-        metrics.attach(Metric("⌁", "SYSTEM STATE", "Healthy" if self.status.get("healthy") else "Offline", "Core service status", "teal"), 0, 0, 1, 1)
-        metrics.attach(Metric("▣", "WORKSPACES", "Foundation", "Podman installed", "blue"), 1, 0, 1, 1)
-        metrics.attach(Metric("◇", "RECOVERY", "Guarded", "Mutations disabled", "purple"), 2, 0, 1, 1)
-        metrics.attach(Metric("↻", "UPDATES", "Planned", "Transactional gate", "amber"), 3, 0, 1, 1)
-        page.append(metrics)
-
-        lower = Gtk.Grid(column_spacing=18, row_spacing=18)
-        lower.set_column_homogeneous(True)
-        lower.attach(self.build_foundation_panel(), 0, 0, 2, 1)
-        lower.attach(self.build_safety_panel(), 2, 0, 1, 1)
-        page.append(lower)
-        return scroll
-
-    def panel(self, title: str, subtitle: str) -> tuple[Gtk.Box, Gtk.Box]:
-        frame = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        frame.add_css_class("panel")
-        eye = Gtk.Label(label=subtitle, xalign=0)
-        eye.add_css_class("eyebrow")
-        heading = Gtk.Label(label=title, xalign=0)
-        heading.add_css_class("panel-title")
-        body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        frame.append(eye)
-        frame.append(heading)
-        frame.append(body)
-        return frame, body
-
-    def build_foundation_panel(self) -> Gtk.Box:
-        frame, body = self.panel("Operating system foundation", "REAL IMAGE CONTENTS")
-        rows = [
-            ("Debian 13", "Stable package and security base", "Ready"),
-            ("KDE Plasma", "Wayland desktop and system settings", "Ready"),
-            ("Podman", "Rootless development containers", "Installed"),
-            ("Calamares", "Graphical disk installer", "Included"),
-        ]
-        for title, detail, state in rows:
-            row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-            row.add_css_class("list-row")
-            text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-            text.set_hexpand(True)
-            text.append(Gtk.Label(label=title, xalign=0, css_classes=["row-title"]))
-            text.append(Gtk.Label(label=detail, xalign=0, css_classes=["detail"]))
-            row.append(text)
-            row.append(Gtk.Label(label=state, css_classes=["state-pill"]))
-            body.append(row)
-        return frame
-
-    def build_safety_panel(self) -> Gtk.Box:
-        frame, body = self.panel("Safety boundaries", "HONEST BY DEFAULT")
-        messages = [
-            "No telemetry or cloud account",
-            "Privileged mutations disabled",
-            "Unix socket API is versioned",
-            "Systemd service is sandboxed",
-            "Snapshots are not called backups",
-        ]
-        for message in messages:
-            label = Gtk.Label(label=f"✓  {message}", xalign=0, wrap=True)
-            label.add_css_class("check-row")
-            body.append(label)
-        return frame
-
-    def build_message(self, title: str, message: str) -> Gtk.Box:
-        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
-        page.set_halign(Gtk.Align.CENTER)
-        page.set_valign(Gtk.Align.CENTER)
-        icon = Gtk.Label(label="◇")
-        icon.add_css_class("empty-icon")
-        heading = Gtk.Label(label=title)
-        heading.add_css_class("empty-title")
-        copy = Gtk.Label(label=message, wrap=True, justify=Gtk.Justification.CENTER)
-        copy.set_max_width_chars(60)
-        copy.add_css_class("empty-copy")
-        page.append(icon)
-        page.append(heading)
-        page.append(copy)
-        return page
+    def refresh_status(self) -> bool:
+        status = daemon_status()
+        cpu, ram, disk = host_metrics()
+        healthy = bool(status.get("healthy"))
+        self.system_card.set_copy(
+            "System healthy" if healthy else "Service offline",
+            f"CPU {cpu}%  ·  RAM {ram}%  ·  Disk {disk}%",
+        )
+        self.system_card.remove_css_class("offline-card")
+        if not healthy:
+            self.system_card.add_css_class("offline-card")
+        return GLib.SOURCE_CONTINUE
 
 
 class ForgeApplication(Gtk.Application):
@@ -273,7 +230,11 @@ class ForgeApplication(Gtk.Application):
         provider = Gtk.CssProvider()
         try:
             provider.load_from_path(CSS_PATH)
-            Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+            display = Gdk.Display.get_default()
+            if display:
+                Gtk.StyleContext.add_provider_for_display(
+                    display, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+                )
         except GLib.Error:
             pass
 

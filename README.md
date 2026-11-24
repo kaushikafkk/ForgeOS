@@ -79,6 +79,7 @@ The image above is the original design reference. The repository ships its nativ
 
 - [Architecture](docs/ARCHITECTURE.md)
 - [Build and test guide](docs/BUILDING.md)
+- [Desktop design contract](docs/DESIGN.md)
 - [Implementation status](docs/STATUS.md)
 - [Roadmap](ROADMAP.md)
 - [Security policy](SECURITY.md)

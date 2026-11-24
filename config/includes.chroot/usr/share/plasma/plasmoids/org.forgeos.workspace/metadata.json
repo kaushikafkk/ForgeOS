@@ -1,0 +1,14 @@
+{
+  "KPlugin": {
+    "Authors": [{"Name": "ForgeOS"}],
+    "Category": "System Information",
+    "Description": "Shows the active ForgeOS development workspace",
+    "Icon": "forgeos",
+    "Id": "org.forgeos.workspace",
+    "Name": "ForgeOS Workspace",
+    "Version": "1.0",
+    "License": "MIT"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "KPackageStructure": "Plasma/Applet"
+}

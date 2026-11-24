@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=ForgeOS Desktop Layout
+Comment=Apply the native ForgeOS Plasma workspace
+Exec=/usr/bin/forgeos-session-setup
+OnlyShowIn=KDE;
+X-KDE-autostart-phase=1
+X-KDE-StartupNotify=false
+NoDisplay=true

@@ -1,0 +1,10 @@
+#!/bin/sh
+printf '\033[1;36mForgeOS\033[0m  ·  Workspace 01  ·  Backend\n'
+printf '\033[2mNative developer workstation · local first · no telemetry\033[0m\n\n'
+if command -v forge >/dev/null 2>&1; then
+  forge status 2>/dev/null || printf '\033[33mforged is starting; run `forge status` again shortly.\033[0m\n'
+fi
+printf '\n\033[32m✓ Forge Shell ready\033[0m\n'
+printf 'Try: \033[35mforge status --json\033[0m\n\n'
+export PS1='\[\033[1;36m\]\u@\h\[\033[0m\]:\[\033[1;35m\]\w\[\033[0m\]$ '
+exec /bin/bash --norc -i

@@ -1,0 +1,12 @@
+{
+  "KPlugin": {
+    "Id": "forgeos-layout",
+    "Name": "ForgeOS Adaptive Layout",
+    "Description": "Places Forge Hub and Forge Shell like the ForgeOS desktop design",
+    "Version": "1.0",
+    "License": "MIT",
+    "Authors": [{"Name": "ForgeOS"}]
+  },
+  "X-Plasma-API": "javascript",
+  "X-Plasma-MainScript": "code/main.js"
+}

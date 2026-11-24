@@ -4,6 +4,7 @@ Name=Forge Hub
 Comment=Native system health, workspaces, updates, and recovery
 Exec=/usr/bin/forge-hub
 Icon=forgeos
+StartupWMClass=org.forgeos.Hub
 Terminal=false
 Categories=System;Settings;
 Keywords=ForgeOS;System;Recovery;Containers;

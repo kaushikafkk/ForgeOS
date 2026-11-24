@@ -1,0 +1,16 @@
+[General]
+ColorScheme=BreezeDark
+Name=ForgeOS
+
+[Icons]
+Theme=breeze-dark
+
+[KDE]
+LookAndFeelPackage=org.kde.breezedark.desktop
+SingleClick=false
+
+[WM]
+activeBackground=19,28,35
+activeForeground=244,247,249
+inactiveBackground=15,22,28
+inactiveForeground=153,166,174

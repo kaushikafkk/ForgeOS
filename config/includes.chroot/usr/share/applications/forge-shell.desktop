@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Forge Shell
+Comment=Open the ForgeOS developer terminal
+Exec=konsole --profile ForgeOS
+Icon=utilities-terminal
+Terminal=false
+Categories=Development;System;TerminalEmulator;
+Keywords=ForgeOS;Shell;Terminal;Backend;

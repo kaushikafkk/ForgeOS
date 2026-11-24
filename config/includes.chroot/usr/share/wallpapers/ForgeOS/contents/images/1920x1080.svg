@@ -1,15 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
   <defs>
-    <radialGradient id="bg" cx="66%" cy="18%" r="90%"><stop stop-color="#163849"/><stop offset=".48" stop-color="#091923"/><stop offset="1" stop-color="#050b11"/></radialGradient>
-    <linearGradient id="line" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2dd4bf"/><stop offset="1" stop-color="#60a5fa"/></linearGradient>
-    <filter id="blur"><feGaussianBlur stdDeviation="28"/></filter>
+    <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#07141b"/><stop offset=".5" stop-color="#071018"/><stop offset="1" stop-color="#17120d"/>
+    </linearGradient>
+    <radialGradient id="tealGlow" cx="13%" cy="32%" r="57%">
+      <stop stop-color="#00d7c0" stop-opacity=".48"/><stop offset=".38" stop-color="#008f88" stop-opacity=".17"/><stop offset="1" stop-color="#001d24" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amberGlow" cx="96%" cy="72%" r="58%">
+      <stop stop-color="#ff9d16" stop-opacity=".55"/><stop offset=".38" stop-color="#b95d00" stop-opacity=".16"/><stop offset="1" stop-color="#2c1600" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="38"/></filter>
   </defs>
-  <rect width="1920" height="1080" fill="url(#bg)"/>
-  <circle cx="1370" cy="250" r="250" fill="none" stroke="#2dd4bf" stroke-opacity=".12" stroke-width="2"/>
-  <circle cx="1370" cy="250" r="170" fill="none" stroke="#60a5fa" stroke-opacity=".13" stroke-width="2"/>
-  <path d="M0 920C400 720 680 1020 1030 810s620-180 890-30v300H0z" fill="#07131b" opacity=".7"/>
-  <path d="M1280 160h180v48h-132v55h114v48h-114v120h-48z" fill="url(#line)" opacity=".9"/>
-  <circle cx="1370" cy="250" r="105" fill="#2dd4bf" opacity=".06" filter="url(#blur)"/>
-  <text x="100" y="900" fill="#dff9f6" font-family="Inter, sans-serif" font-size="52" font-weight="700">ForgeOS</text>
-  <text x="103" y="946" fill="#7895a7" font-family="Inter, sans-serif" font-size="20" letter-spacing="4">BUILD WITH CONFIDENCE</text>
+  <rect width="1920" height="1080" fill="url(#base)"/>
+  <rect width="1920" height="1080" fill="url(#tealGlow)"/>
+  <rect width="1920" height="1080" fill="url(#amberGlow)"/>
+  <path d="M-80 286C165 184 335 203 533 72S832-32 1065-84" fill="none" stroke="#00e5cf" stroke-opacity=".78" stroke-width="2"/>
+  <g fill="none" stroke="#1cd2c0" stroke-opacity=".22" stroke-width="1.25">
+    <path d="M-95 330C151 222 350 248 543 118S847 8 1084-50"/>
+    <path d="M-104 375C140 261 360 293 558 163S864 48 1104-12"/>
+    <path d="M-118 423C129 302 369 340 572 211S882 92 1123 28"/>
+    <path d="M-132 475C117 345 375 390 586 260S901 140 1144 71"/>
+    <path d="M-145 532C108 391 379 440 598 312S923 191 1164 116"/>
+    <path d="M-156 592C99 440 382 492 608 366S944 244 1184 164"/>
+    <path d="M-166 656C91 493 384 546 617 423S964 301 1206 216"/>
+    <path d="M-175 724C82 550 384 603 626 483S985 361 1228 271"/>
+    <path d="M-183 797C74 611 384 663 635 546S1005 425 1250 330"/>
+    <path d="M-190 875C66 675 383 727 644 613S1026 491 1273 392"/>
+    <path d="M-196 958C57 744 382 794 654 683S1047 561 1297 458"/>
+    <path d="M-201 1048C48 816 381 865 665 757S1069 635 1322 528"/>
+  </g>
+  <path d="M1085 1116C1294 940 1413 932 1557 824S1780 677 2016 694" fill="none" stroke="#ff9d1c" stroke-opacity=".72" stroke-width="2"/>
+  <g fill="none" stroke="#f39a28" stroke-opacity=".23" stroke-width="1.25">
+    <path d="M1004 1123C1226 922 1364 918 1517 806S1770 636 2027 652"/>
+    <path d="M931 1129C1164 902 1318 903 1480 786S1760 596 2037 608"/>
+    <path d="M862 1136C1108 882 1276 888 1446 765S1749 555 2047 562"/>
+    <path d="M797 1142C1058 863 1237 874 1414 742S1738 514 2057 514"/>
+    <path d="M735 1149C1014 846 1201 860 1385 717S1726 472 2067 463"/>
+    <path d="M676 1156C974 829 1168 845 1358 690S1714 429 2077 410"/>
+    <path d="M620 1162C938 812 1138 830 1333 661S1702 385 2087 354"/>
+    <path d="M566 1168C905 793 1111 814 1310 630S1690 339 2097 296"/>
+    <path d="M514 1174C875 774 1085 797 1289 597S1678 292 2107 234"/>
+    <path d="M464 1180C847 754 1062 779 1270 562S1667 243 2117 169"/>
+  </g>
+  <g fill="none" stroke="#7da0aa" stroke-opacity=".11" stroke-width="1">
+    <path d="M138 70C410-23 541 98 750 72s341-91 510-31 261 42 475-36"/>
+    <path d="M116 113C405 9 546 135 760 110s349-92 523-27 269 51 493-30"/>
+    <path d="M93 157C401 42 551 173 770 149s356-91 535-21 277 59 510-25"/>
+    <path d="M70 202C397 75 555 212 780 189s364-89 548-15 285 68 527-18"/>
+    <path d="M47 248C393 108 559 252 790 230s371-87 560-8 294 77 545-13"/>
+  </g>
+  <ellipse cx="260" cy="304" rx="245" ry="108" fill="#00e8d1" opacity=".08" filter="url(#soft)"/>
+  <ellipse cx="1748" cy="805" rx="280" ry="130" fill="#ff9c19" opacity=".10" filter="url(#soft)"/>
 </svg>

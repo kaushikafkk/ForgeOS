@@ -24,5 +24,10 @@ jobs:
         run: go build -buildvcs=false ./cmd/forge ./cmd/forged
       - name: Validate native Forge Hub
         run: python3 -m py_compile config/includes.chroot/usr/bin/forge-hub
+      - name: Validate session scripts
+        run: |
+          sh -n config/includes.chroot/usr/bin/forgeos-session-setup
+          sh -n config/includes.chroot/usr/bin/forge-shell-welcome
+          sh -n config/hooks/live/010-forgeos-users.hook.chroot
       - name: Validate OS configuration
         run: bash scripts/validate-config.sh

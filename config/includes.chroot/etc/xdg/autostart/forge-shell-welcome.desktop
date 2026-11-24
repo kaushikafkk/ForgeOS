@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Forge Shell Welcome
+Comment=Open the ForgeOS developer workspace
+Exec=konsole --profile ForgeOS --title "workspace · forge shell" -e /usr/bin/forge-shell-welcome
+Icon=utilities-terminal
+OnlyShowIn=KDE;
+X-KDE-autostart-after=panel
+X-KDE-StartupNotify=false
+NoDisplay=true

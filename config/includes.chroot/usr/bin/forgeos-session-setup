@@ -1,0 +1,82 @@
+#!/bin/sh
+set -eu
+
+config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
+state_dir=${XDG_STATE_HOME:-"$HOME/.local/state"}/forgeos
+wallpaper=/usr/share/wallpapers/ForgeOS/contents/images/1920x1080.svg
+mkdir -p "$state_dir" "$config_home"
+
+if command -v plasma-apply-wallpaperimage >/dev/null 2>&1; then
+  plasma-apply-wallpaperimage "$wallpaper" >/dev/null 2>&1 || true
+fi
+
+if command -v kwriteconfig6 >/dev/null 2>&1; then
+  kwriteconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage org.kde.breezedark.desktop
+  kwriteconfig6 --file kdeglobals --group Icons --key Theme breeze-dark
+  kwriteconfig6 --file kwinrc --group Desktops --key Number 1
+  kwriteconfig6 --file kwinrc --group Desktops --key Rows 1
+  kwriteconfig6 --file kwinrc --group Desktops --key Name_1 Backend
+fi
+
+marker="$state_dir/plasma-layout-v2"
+[ -e "$marker" ] && exit 0
+
+qdbus_command=
+if command -v qdbus6 >/dev/null 2>&1; then
+  qdbus_command=qdbus6
+elif command -v qdbus >/dev/null 2>&1; then
+  qdbus_command=qdbus
+fi
+[ -n "$qdbus_command" ] || exit 0
+
+attempt=0
+while [ "$attempt" -lt 30 ]; do
+  if "$qdbus_command" org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript 'print("ForgeOS shell ready")' >/dev/null 2>&1; then
+    break
+  fi
+  attempt=$((attempt + 1))
+  sleep 1
+done
+[ "$attempt" -lt 30 ] || exit 0
+
+layout='var existing = panels();
+for (var i = 0; i < existing.length; i++) { existing[i].remove(); }
+
+var brand = new Panel;
+brand.location = "top";
+brand.alignment = "left";
+brand.length = 230;
+brand.height = 44;
+brand.hiding = "none";
+brand.floating = true;
+brand.addWidget("org.forgeos.brand");
+
+var top = new Panel;
+top.location = "top";
+top.alignment = "center";
+top.length = 720;
+top.height = 44;
+top.hiding = "none";
+top.floating = true;
+
+top.addWidget("org.forgeos.workspace");
+top.addWidget("org.kde.plasma.systemtray");
+top.addWidget("org.kde.plasma.digitalclock");
+
+var dock = new Panel;
+dock.location = "left";
+dock.alignment = "center";
+dock.length = 570;
+dock.height = 64;
+dock.hiding = "none";
+dock.floating = true;
+
+var tasks = dock.addWidget("org.kde.plasma.icontasks");
+tasks.currentConfigGroup = ["General"];
+tasks.writeConfig("launchers", "applications:forge-shell.desktop,applications:org.kde.dolphin.desktop,applications:firefox-esr.desktop,applications:org.kde.discover.desktop,applications:forge-hub.desktop,applications:systemsettings.desktop");
+tasks.writeConfig("showOnlyCurrentDesktop", "true");
+tasks.writeConfig("showOnlyCurrentActivity", "true");'
+
+if "$qdbus_command" org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "$layout" >/dev/null 2>&1; then
+  : > "$marker"
+fi
