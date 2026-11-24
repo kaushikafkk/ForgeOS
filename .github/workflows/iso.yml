@@ -26,8 +26,8 @@ jobs:
       - name: Build ForgeOS binaries
         run: |
           mkdir -p config/includes.chroot/usr/libexec/forgeos config/includes.chroot/usr/bin
-          CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o config/includes.chroot/usr/libexec/forgeos/forged ./cmd/forged
-          CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o config/includes.chroot/usr/bin/forge ./cmd/forge
+          CGO_ENABLED=0 go build -buildvcs=false -trimpath -ldflags='-s -w' -o config/includes.chroot/usr/libexec/forgeos/forged ./cmd/forged
+          CGO_ENABLED=0 go build -buildvcs=false -trimpath -ldflags='-s -w' -o config/includes.chroot/usr/bin/forge ./cmd/forge
       - name: Build image
         run: bash scripts/build-iso.sh
       - name: Inspect boot records

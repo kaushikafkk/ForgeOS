@@ -20,4 +20,5 @@ __pycache__/
 Blueprint/qa/
 Blueprint/qa2/
 Blueprint/qa3/
+.tools/
 
