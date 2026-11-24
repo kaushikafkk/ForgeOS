@@ -14,6 +14,7 @@ Last reviewed: 24 November 2026
 - Configuration validation and CI build/test workflow.
 - ISO workflow with downloadable image and checksum artifacts, El Torito inspection, and a privileged Debian build environment.
 - QEMU boot-proof workflow with checksum verification and timed native framebuffer captures.
+- Latest QEMU proof reached KDE, opened Forge Hub, and reported a healthy response from `forged`.
 - Architecture, security, build, roadmap, blueprint, and screenshot evidence.
 
 ## Demonstrated but not yet integrated

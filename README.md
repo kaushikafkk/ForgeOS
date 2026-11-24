@@ -59,7 +59,7 @@ The ISO will be written to `.build/forgeos-amd64.hybrid.iso`. See [docs/BUILDING
 
 ![ForgeOS native Forge Hub booted from the ISO in QEMU](docs/screenshots/forgeos-native-qemu.png)
 
-This is an implementation screenshot captured automatically after booting the checksum-verified ISO in QEMU. It shows the native GTK 4 Forge Hub shipped in the image, not a webpage or browser mockup. The offline service badge exposed a live-user socket permission issue; the socket policy has since been corrected and the next image build is gated by the same boot-proof workflow.
+This is an implementation screenshot captured automatically after booting the checksum-verified ISO in QEMU. It shows the native GTK 4 Forge Hub shipped in the image, not a webpage or browser mockup. The healthy badge confirms that the live desktop reached the group-restricted `forged` Unix socket and received a valid API response.
 
 ## Interface design reference
 
