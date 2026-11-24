@@ -8,5 +8,6 @@
     "Authors": [{"Name": "ForgeOS"}]
   },
   "X-Plasma-API": "javascript",
-  "X-Plasma-MainScript": "code/main.js"
+  "X-Plasma-MainScript": "code/main.js",
+  "KPackageStructure": "KWin/Script"
 }

@@ -7,6 +7,8 @@ UseFontLineCharacters=true
 Command=/bin/bash
 Name=ForgeOS
 Parent=FALLBACK/
+LocalTabTitleFormat=workspace · forge shell
+RemoteTabTitleFormat=workspace · forge shell
 TerminalColumns=110
 TerminalRows=34
 

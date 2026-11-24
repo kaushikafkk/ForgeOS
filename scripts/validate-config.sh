@@ -25,5 +25,8 @@ grep -q '^ListenStream=/run/forgeos/forged.sock$' config/includes.chroot/etc/sys
 grep -q '^NoNewPrivileges=true$' config/includes.chroot/etc/systemd/system/forged.service
 grep -q 'forgeos-layoutEnabled=true' config/includes.chroot/etc/skel/.config/kwinrc
 grep -q 'System healthy' config/includes.chroot/usr/bin/forge-hub
+grep -q 'lengthMode = "custom"' config/includes.chroot/usr/bin/forgeos-session-setup
+grep -q '"KPackageStructure": "KWin/Script"' config/includes.chroot/usr/share/kwin/scripts/forgeos-layout/metadata.json
+grep -q 'LIVE_USERNAME="forge"' config/includes.chroot/etc/live/config.conf.d/forgeos.conf
 
 echo "ForgeOS configuration validation passed"

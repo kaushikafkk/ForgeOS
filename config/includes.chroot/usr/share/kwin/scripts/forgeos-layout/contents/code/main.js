@@ -9,7 +9,7 @@ function placeForgeWindow(window) {
     var gap = Math.max(24, Math.round(area.width * 0.025));
     var top = area.y + Math.max(70, Math.round(area.height * 0.095));
 
-    if (klass.indexOf("org.forgeos.hub") !== -1 || caption === "forge hub") {
+    if (klass.indexOf("org.forgeos.hub") !== -1 || klass.indexOf("forge-hub") !== -1 || caption === "forge hub") {
         var hubWidth = Math.min(468, Math.round(area.width * 0.32));
         var hubHeight = Math.min(650, area.height - (top - area.y) - 34);
         window.frameGeometry = {
@@ -22,7 +22,7 @@ function placeForgeWindow(window) {
         return;
     }
 
-    if (klass.indexOf("konsole") !== -1 && caption.indexOf("forge shell") !== -1) {
+    if (klass.indexOf("konsole") !== -1) {
         var reserved = Math.min(535, Math.round(area.width * 0.37));
         var shellWidth = Math.max(620, area.width - reserved - gap * 2);
         var shellHeight = Math.min(650, area.height - (top - area.y) - 34);

@@ -18,7 +18,7 @@ if command -v kwriteconfig6 >/dev/null 2>&1; then
   kwriteconfig6 --file kwinrc --group Desktops --key Name_1 Backend
 fi
 
-marker="$state_dir/plasma-layout-v2"
+marker="$state_dir/plasma-layout-v3"
 [ -e "$marker" ] && exit 0
 
 qdbus_command=
@@ -45,7 +45,10 @@ for (var i = 0; i < existing.length; i++) { existing[i].remove(); }
 var brand = new Panel;
 brand.location = "top";
 brand.alignment = "left";
+brand.lengthMode = "custom";
 brand.length = 230;
+brand.minimumLength = 230;
+brand.maximumLength = 230;
 brand.height = 44;
 brand.hiding = "none";
 brand.floating = true;
@@ -54,7 +57,10 @@ brand.addWidget("org.forgeos.brand");
 var top = new Panel;
 top.location = "top";
 top.alignment = "center";
+top.lengthMode = "custom";
 top.length = 720;
+top.minimumLength = 720;
+top.maximumLength = 720;
 top.height = 44;
 top.hiding = "none";
 top.floating = true;
@@ -66,7 +72,10 @@ top.addWidget("org.kde.plasma.digitalclock");
 var dock = new Panel;
 dock.location = "left";
 dock.alignment = "center";
+dock.lengthMode = "custom";
 dock.length = 570;
+dock.minimumLength = 570;
+dock.maximumLength = 570;
 dock.height = 64;
 dock.hiding = "none";
 dock.floating = true;
@@ -80,3 +89,7 @@ tasks.writeConfig("showOnlyCurrentActivity", "true");'
 if "$qdbus_command" org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "$layout" >/dev/null 2>&1; then
   : > "$marker"
 fi
+
+"$qdbus_command" org.kde.KWin /KWin reconfigure >/dev/null 2>&1 || true
+
+(sleep 12; pkill -f plasma-welcome >/dev/null 2>&1 || true) &
