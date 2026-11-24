@@ -6,7 +6,7 @@ This repository implements milestone zero from the ForgeOS product and engineeri
 
 ## What works today
 
-- A Debian `live-build` recipe for an x86-64 UEFI KDE Plasma live image.
+- A Debian `live-build` recipe for an x86-64 hybrid BIOS/UEFI KDE Plasma live image.
 - Branded system identity, first-boot defaults, package selection, and desktop launcher.
 - A native GTK 4 Forge Hub control center that talks to the local Unix-socket API.
 - A small Go control service with a typed, versioned read-only API over a Unix socket.
@@ -55,11 +55,17 @@ sudo ./scripts/build-iso.sh
 
 The ISO will be written to `.build/forgeos-amd64.hybrid.iso`. See [docs/BUILDING.md](docs/BUILDING.md) for the full workflow.
 
-## Native interface direction
+## Verified native interface
+
+![ForgeOS native Forge Hub booted from the ISO in QEMU](docs/screenshots/forgeos-native-qemu.png)
+
+This is an implementation screenshot captured automatically after booting the checksum-verified ISO in QEMU. It shows the native GTK 4 Forge Hub shipped in the image, not a webpage or browser mockup. The offline service badge exposed a live-user socket permission issue; the socket policy has since been corrected and the next image build is gated by the same boot-proof workflow.
+
+## Interface design reference
 
 ![ForgeOS native desktop design reference](docs/screenshots/forgeos-desktop-concept.png)
 
-The image above is a design reference. The repository now ships a native GTK 4 implementation at `config/includes.chroot/usr/bin/forge-hub`; the earlier browser prototype has been removed. A release screenshot must be captured from the built ISO or native Linux test session before milestone zero is tagged.
+The image above is the original design reference. The repository ships its native GTK 4 implementation at `config/includes.chroot/usr/bin/forge-hub`; the earlier browser prototype has been removed.
 
 ## Project boundaries
 

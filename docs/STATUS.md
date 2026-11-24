@@ -12,14 +12,15 @@ Last reviewed: 24 November 2026
 - `forge status` human and JSON output.
 - Unit tests for status, version rejection, and action rejection.
 - Configuration validation and CI build/test workflow.
-- Manual ISO workflow with downloadable image and checksum artifacts.
+- ISO workflow with downloadable image and checksum artifacts, El Torito inspection, and a privileged Debian build environment.
+- QEMU boot-proof workflow with checksum verification and timed native framebuffer captures.
 - Architecture, security, build, roadmap, blueprint, and screenshot evidence.
 
 ## Demonstrated but not yet integrated
 
 - Forge Hub reads daemon health from the versioned Unix socket; workspace, update, and recovery panels remain guarded placeholders.
 - The Polkit file defines inspection only; mutations have no policy or implementation.
-- Concept screens remain product references and are clearly labeled as such; native release screenshots are still required from the built image.
+- Concept screens remain product references and are clearly labeled as such; the README now leads with a native screenshot captured from the built image.
 
 ## Not implemented
 
@@ -32,4 +33,4 @@ Last reviewed: 24 November 2026
 
 ## Milestone-zero release gate
 
-The repository is ready to publish as an engineering foundation when CI passes on GitHub and the manual ISO workflow produces an image. It is not a stable operating-system release and must not be represented as one.
+The repository is published as an engineering foundation with passing CI, a built hybrid ISO, inspected boot records, and QEMU boot evidence. It is not a stable operating-system release and must not be represented as one.
