@@ -1,0 +1,93 @@
+name: Capture Native Desktop
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/desktop-proof.yml"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find latest successful ISO build
+        id: iso
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_id="$(gh api \
+            -H 'Accept: application/vnd.github+json' \
+            "/repos/${GITHUB_REPOSITORY}/actions/workflows/iso.yml/runs?branch=main&status=success&per_page=1" \
+            --jq '.workflow_runs[0].id')"
+          test -n "$run_id"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+
+      - name: Download verified ISO artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: forgeos-amd64-milestone-zero
+          path: .build
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.iso.outputs.run_id }}
+
+      - name: Verify ISO checksum
+        run: |
+          cd .build
+          sha256sum --check forgeos-amd64.hybrid.iso.sha256
+
+      - name: Install virtual machine tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-x86 imagemagick socat
+
+      - name: Boot ForgeOS and capture the native desktop
+        run: |
+          mkdir -p screenshots
+          qemu-system-x86_64 \
+            -machine accel=tcg \
+            -cpu max \
+            -m 4096 \
+            -smp 2 \
+            -cdrom .build/forgeos-amd64.hybrid.iso \
+            -boot order=d \
+            -display none \
+            -monitor unix:/tmp/forgeos-monitor.sock,server,nowait \
+            -serial file:screenshots/forgeos-serial.log \
+            -no-reboot &
+          qemu_pid=$!
+
+          previous=0
+          for seconds in 90 180 300 420; do
+            elapsed=0
+            delay=$((seconds - previous))
+            while [ "$elapsed" -lt "$delay" ]; do
+              kill -0 "$qemu_pid"
+              sleep 15
+              elapsed=$((elapsed + 15))
+            done
+            echo "screendump $GITHUB_WORKSPACE/screenshots/forgeos-${seconds}s.ppm" \
+              | socat - UNIX-CONNECT:/tmp/forgeos-monitor.sock
+            convert "$GITHUB_WORKSPACE/screenshots/forgeos-${seconds}s.ppm" \
+              "$GITHUB_WORKSPACE/screenshots/forgeos-${seconds}s.png"
+            previous=$seconds
+          done
+
+          kill "$qemu_pid" || true
+
+      - name: Upload native boot evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: forgeos-native-screenshots
+          path: |
+            screenshots/*.png
+            screenshots/forgeos-serial.log
+          if-no-files-found: error
+          retention-days: 14
