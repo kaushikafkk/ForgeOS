@@ -1,0 +1,9 @@
+{
+  "KPlugin": {
+    "Authors": [{"Name": "ForgeOS Project"}],
+    "Id": "ForgeOS",
+    "Name": "ForgeOS",
+    "Description": "ForgeOS milestone-zero wallpaper",
+    "License": "MIT"
+  }
+}

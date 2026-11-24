@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=ForgeOS
+Description=ForgeOS boot splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/forgeos
+ScriptFile=/usr/share/plymouth/themes/forgeos/forgeos.script

@@ -4,4 +4,7 @@ set -eu
 getent group forgeos >/dev/null || groupadd --system forgeos
 systemctl enable forged.socket
 install -d -m 0755 /usr/share/forgeos /etc/forgeos
+chmod 0755 /usr/bin/forge-hub
+update-alternatives --install /usr/share/plymouth/themes/default.plymouth default.plymouth /usr/share/plymouth/themes/forgeos/forgeos.plymouth 200
+update-initramfs -u
 update-desktop-database /usr/share/applications || true

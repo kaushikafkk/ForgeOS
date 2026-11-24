@@ -8,7 +8,7 @@ local/
 *.img
 
 # Go
-bin/
+/bin/
 coverage.out
 
 # editors and OS files

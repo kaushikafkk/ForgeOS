@@ -1,0 +1,46 @@
+@define-color bg #071018;
+@define-color panel #101c27;
+@define-color panel2 #122331;
+@define-color line #243746;
+@define-color text #f4f7fb;
+@define-color muted #8fa2b4;
+@define-color teal #35d5c4;
+@define-color blue #67a9ff;
+@define-color purple #b69cff;
+@define-color amber #f2ba62;
+
+window { background: @bg; color: @text; font-family: Inter, "Noto Sans", sans-serif; }
+.sidebar { background: #09131d; border-right: 1px solid @line; padding: 26px 17px; }
+.brand-mark { min-width: 34px; min-height: 34px; border-radius: 11px; border: 1px solid @teal; color: @teal; background: #102a2c; font-size: 18px; font-weight: 800; }
+.brand-name { font-size: 20px; font-weight: 800; }
+.nav-button { background: transparent; color: #9db0c1; border: 0; border-radius: 10px; padding: 12px; text-align: left; }
+.nav-button:checked { background: #103139; color: #effffd; border: 1px solid #18505a; }
+.local-state { color: @teal; font-size: 12px; padding: 10px; }
+.header { min-height: 92px; border-bottom: 1px solid #1d2d3a; padding: 0 36px; }
+.eyebrow, .caption { color: #71899c; font-size: 10px; font-weight: 800; letter-spacing: 1.2px; }
+.window-title { font-size: 23px; font-weight: 800; }
+.health-badge { border-radius: 999px; padding: 8px 12px; border: 1px solid @line; background: #0d1923; font-size: 12px; }
+.health-badge.healthy { color: #9af2df; }
+.health-badge.offline { color: #ffb0a7; }
+.hero { background: #102831; border: 1px solid #1b4a50; border-radius: 20px; padding: 38px 42px; }
+.tag { color: @teal; background: #123b3b; border: 1px solid #1c5655; border-radius: 7px; padding: 7px 9px; font-size: 10px; font-weight: 800; }
+.hero-title { font-size: 38px; line-height: 1.05; font-weight: 850; }
+.hero-copy { color: #a6b9c7; font-size: 14px; }
+.hero-emblem { min-width: 92px; min-height: 92px; border-radius: 28px; border: 1px solid @teal; color: @teal; font-size: 42px; font-weight: 900; margin: 30px; background: #0b1a22; }
+.metric { background: @panel; border: 1px solid @line; border-radius: 14px; padding: 16px; }
+.metric-icon { min-width: 38px; min-height: 38px; border-radius: 10px; font-weight: 800; }
+.metric-icon.teal { color: @teal; background: #123330; }
+.metric-icon.blue { color: @blue; background: #162a43; }
+.metric-icon.purple { color: @purple; background: #292341; }
+.metric-icon.amber { color: @amber; background: #332a1d; }
+.metric-value { font-size: 15px; font-weight: 800; }
+.detail { color: #748b9b; font-size: 10px; }
+.panel { background: @panel; border: 1px solid @line; border-radius: 16px; padding: 22px; }
+.panel-title { font-size: 18px; font-weight: 800; padding-bottom: 8px; }
+.list-row { border-top: 1px solid @line; padding: 13px 2px; }
+.row-title { font-size: 12px; font-weight: 700; }
+.state-pill { color: @teal; background: #12322f; border-radius: 999px; padding: 5px 9px; font-size: 9px; }
+.check-row { border-top: 1px solid @line; padding: 13px 3px; color: #bfd0dc; font-size: 11px; }
+.empty-icon { color: @teal; font-size: 48px; }
+.empty-title { font-size: 30px; font-weight: 850; }
+.empty-copy { color: @muted; font-size: 14px; }

@@ -1,6 +1,6 @@
 # ForgeOS architecture
 
-ForgeOS milestone zero is a Debian-derived live system with a KDE Plasma desktop, a read-only local control plane, and a browser-based Forge Hub prototype. It intentionally reuses mature upstream components instead of replacing the Linux kernel, init system, package manager, compositor, encryption stack, or container runtime.
+ForgeOS milestone zero is a Debian-derived live system with a KDE Plasma desktop, a read-only local control plane, and a native GTK 4 Forge Hub application. It intentionally reuses mature upstream components instead of replacing the Linux kernel, init system, package manager, compositor, encryption stack, or container runtime.
 
 ## Trust boundaries
 
@@ -31,7 +31,7 @@ The `config/` tree is consumed by Debian `live-build`. It selects Debian 13, an 
 
 ## Interface
 
-Forge Hub presents system health, reproducible workspaces, planned updates, and recovery as one visual model. The prototype has functional navigation, keyboard focus, responsive layouts, a command shortcut, and a transparent message whenever a requested mutation is not implemented.
+Forge Hub presents system health, reproducible workspaces, planned updates, and recovery as one visual model. It is installed as `/usr/bin/forge-hub`, uses native GTK widgets, queries the versioned Unix-socket API, and states clearly when a privileged operation is not implemented.
 
 ## Next architecture gates
 

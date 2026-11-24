@@ -45,12 +45,13 @@ The result and checksum are written below `.build/`. The manual GitHub Actions w
 
 Boot the ISO with UEFI enabled, at least 4 GB RAM, two CPU cores, and a 30 GB virtual disk. Confirm KDE loads, Forge Hub opens, networking works, `forge status` reaches `forged`, the live installer starts, and no mutation controls claim to work.
 
-## Prototype screenshot
+## Native Forge Hub
 
-On Windows with Microsoft Edge installed:
+Forge Hub requires Python GObject bindings and GTK 4. It is included in the live image and can be run in a Debian development environment with:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/capture-prototype.ps1
+```bash
+sudo apt install python3-gi gir1.2-gtk-4.0
+python3 config/includes.chroot/usr/bin/forge-hub
 ```
 
-The script captures the implemented HTML rather than a design-only mockup.
+Capture release screenshots from this native application or the built ISO. Do not use the retired browser prototype as implementation evidence.

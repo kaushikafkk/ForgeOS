@@ -22,5 +22,7 @@ jobs:
         run: go test -race ./...
       - name: Build
         run: go build ./cmd/forge ./cmd/forged
+      - name: Validate native Forge Hub
+        run: python3 -m py_compile config/includes.chroot/usr/bin/forge-hub
       - name: Validate OS configuration
         run: bash scripts/validate-config.sh

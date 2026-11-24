@@ -22,6 +22,8 @@ jobs:
           CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o config/includes.chroot/usr/bin/forge ./cmd/forge
       - name: Build image
         run: bash scripts/build-iso.sh
+      - name: Inspect boot records
+        run: xorriso -indev .build/forgeos-amd64.hybrid.iso -report_el_torito plain
       - uses: actions/upload-artifact@v4
         with:
           name: forgeos-amd64-milestone-zero

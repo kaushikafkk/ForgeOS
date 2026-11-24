@@ -1,4 +1,4 @@
-.PHONY: test build validate prototype
+.PHONY: test build validate
 
 test:
 	go test ./...
@@ -10,7 +10,4 @@ build:
 
 validate:
 	./scripts/validate-config.sh
-
-prototype:
-	python3 -m http.server 4173 --directory config/includes.chroot/usr/share/forgeos/prototype
 

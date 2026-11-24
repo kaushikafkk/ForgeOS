@@ -1,0 +1,17 @@
+Window.SetBackgroundTopColor(0.027, 0.063, 0.094);
+Window.SetBackgroundBottomColor(0.012, 0.031, 0.047);
+
+title = Image.Text("ForgeOS", 0.95, 0.98, 1.0);
+subtitle = Image.Text("BUILD WITH CONFIDENCE", 0.30, 0.84, 0.78);
+title_sprite = Sprite(title);
+subtitle_sprite = Sprite(subtitle);
+title_sprite.SetX(Window.GetWidth() / 2 - title.GetWidth() / 2);
+title_sprite.SetY(Window.GetHeight() / 2 - 38);
+subtitle_sprite.SetX(Window.GetWidth() / 2 - subtitle.GetWidth() / 2);
+subtitle_sprite.SetY(Window.GetHeight() / 2 + 18);
+
+fun refresh_callback () {
+  progress = Plymouth.GetBootProgress();
+  subtitle_sprite.SetOpacity(0.45 + progress * 0.55);
+}
+Plymouth.SetRefreshFunction(refresh_callback);

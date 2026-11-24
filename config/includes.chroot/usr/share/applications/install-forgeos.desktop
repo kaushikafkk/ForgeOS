@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Install ForgeOS
+Comment=Install ForgeOS to this computer
+Exec=pkexec calamares
+Icon=calamares
+Terminal=false
+Categories=System;
+Keywords=Install;Installer;ForgeOS;

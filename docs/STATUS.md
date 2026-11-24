@@ -6,7 +6,7 @@ Last reviewed: 24 November 2026
 
 - Debian 13 amd64 ISO-hybrid `live-build` configuration.
 - KDE Plasma developer package profile and Calamares installer packages.
-- ForgeOS system identity, icon, desktop launcher, and Forge Hub prototype.
+- ForgeOS system identity, wallpaper, boot splash, desktop launchers, and native GTK 4 Forge Hub.
 - Versioned read-only Go API over a bounded Unix socket.
 - `forged` systemd socket/service units with sandboxing.
 - `forge status` human and JSON output.
@@ -17,9 +17,9 @@ Last reviewed: 24 November 2026
 
 ## Demonstrated but not yet integrated
 
-- Forge Hub uses representative local state and does not yet subscribe to the daemon.
+- Forge Hub reads daemon health from the versioned Unix socket; workspace, update, and recovery panels remain guarded placeholders.
 - The Polkit file defines inspection only; mutations have no policy or implementation.
-- Concept screens remain product references and are clearly labeled as such.
+- Concept screens remain product references and are clearly labeled as such; native release screenshots are still required from the built image.
 
 ## Not implemented
 

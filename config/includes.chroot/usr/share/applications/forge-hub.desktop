@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 Name=Forge Hub
-Comment=System health, workspaces, updates, and recovery
-Exec=firefox-esr file:///usr/share/forgeos/prototype/index.html
+Comment=Native system health, workspaces, updates, and recovery
+Exec=/usr/bin/forge-hub
 Icon=forgeos
 Terminal=false
 Categories=System;Settings;

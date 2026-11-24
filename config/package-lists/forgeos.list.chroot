@@ -17,6 +17,10 @@ flatpak
 plasma-discover-backend-flatpak
 fonts-inter
 fonts-jetbrains-mono
+python3-gi
+gir1.2-gtk-4.0
+plymouth
+plymouth-themes
 live-tools
 calamares
 calamares-settings-debian

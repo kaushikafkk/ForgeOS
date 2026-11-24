@@ -1,11 +1,9 @@
 # Screenshot evidence
 
-`forgeos-prototype-live.png` is captured from the HTML, CSS, and JavaScript shipped in the live-image overlay. It is implementation evidence for milestone zero.
-
 Files ending in `-concept.png` are product-design references from the blueprint. They are not claims that the installer, recovery environment, or complete desktop shell has already been implemented.
 
-Recreate the implementation screenshot on Windows with:
+The retired browser prototype and its screenshot were removed when Forge Hub moved to native GTK 4. Before a milestone-zero release is tagged, add screenshots captured from the built ISO or a Linux session running:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/capture-prototype.ps1
+```bash
+python3 /usr/bin/forge-hub
 ```

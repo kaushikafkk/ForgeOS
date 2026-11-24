@@ -9,7 +9,8 @@ config/package-lists/forgeos.list.chroot
 config/includes.chroot/etc/os-release
 config/includes.chroot/etc/systemd/system/forged.service
 config/includes.chroot/etc/systemd/system/forged.socket
-config/includes.chroot/usr/share/forgeos/prototype/index.html
+config/includes.chroot/usr/bin/forge-hub
+config/includes.chroot/usr/share/forgeos/forge-hub.css
 config/includes.chroot/usr/share/applications/forge-hub.desktop'
 
 printf '%s\n' "$required" | while IFS= read -r path; do
